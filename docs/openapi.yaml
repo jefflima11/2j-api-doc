@@ -1,0 +1,74 @@
+openapi: 3.1.0
+
+info:
+  title: "2J System API"
+  description: "Documentação oficial das APIs da 2J System."
+  version: "1.0.0"
+
+servers:
+  - url: "Produção"
+  - url: "Simulação"
+  - url: "Desenvolvimento"
+
+
+paths:
+  /configuration/database:
+    post:
+      tags:
+        - Configuração
+      summary: Apontamento ao banco de dados
+      description: Configura o apontamento do banco de dados
+      responses:
+        '201':
+          description: "Banco configurado e pool criado com sucesso"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    exemple: online
+  
+
+  /login:
+    post:
+      tags:
+        - Login
+      summary: Login do sistema
+      description: Realiza a autenticação do usuário no sistema e retorna as informações necessárias para acesso às rotas protegidas.
+      responses:
+        '200':
+          description: "Acesso permitido"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    exemple: online
+        '401':
+          description: "Acesso negado"
+
+  /employees/all:
+    get:
+      tags:
+        - Funcionarios
+  
+  /hospital-beds/status:
+    get:
+      tags:
+        - Leitos Hospitalares
+  
+  /hospital-beds/cleaning-request:
+    get:
+      tags:
+        - Leitos Hospitalares
+  
+  /hospital-beds/request-waiting-confirmation:
+    get:
+      tags:
+        - Leitos Hospitalares
+
+components: {}
