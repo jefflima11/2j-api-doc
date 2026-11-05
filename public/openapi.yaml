@@ -1,0 +1,18 @@
+openapi: 3.1.0
+
+info:
+  title: 2J System API
+  description: Documentação oficial das APIs da 2J System
+  version: 1.0.0
+
+  servers:
+    - url: https://twoj-api-doc.onrender.com
+      description: Produção
+
+  tags:
+    - name: Autenticação
+      description: Endpoints de autenticação
+    - name: Usuários
+      description: Gerenciamento de usuários
+
+  paths: {}
