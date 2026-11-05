@@ -1,74 +1,1911 @@
-openapi: 3.1.0
-
-info:
-  title: "2J System API"
-  description: "Documentação oficial das APIs da 2J System."
-  version: "1.0.0"
-
-servers:
-  - url: "Produção"
-  - url: "Simulação"
-  - url: "Desenvolvimento"
-
-
-paths:
-  /configuration/database:
-    post:
-      tags:
-        - Configuração
-      summary: Apontamento ao banco de dados
-      description: Configura o apontamento do banco de dados
-      responses:
-        '201':
-          description: "Banco configurado e pool criado com sucesso"
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    exemple: online
-  
-
-  /login:
-    post:
-      tags:
-        - Login
-      summary: Login do sistema
-      description: Realiza a autenticação do usuário no sistema e retorna as informações necessárias para acesso às rotas protegidas.
-      responses:
-        '200':
-          description: "Acesso permitido"
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    exemple: online
-        '401':
-          description: "Acesso negado"
-
-  /employees/all:
-    get:
-      tags:
-        - Funcionarios
-  
-  /hospital-beds/status:
-    get:
-      tags:
-        - Leitos Hospitalares
-  
-  /hospital-beds/cleaning-request:
-    get:
-      tags:
-        - Leitos Hospitalares
-  
-  /hospital-beds/request-waiting-confirmation:
-    get:
-      tags:
-        - Leitos Hospitalares
-
-components: {}
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "2j API Documentação",
+    "version": "1.0.0",
+    "description": ""
+  },
+  "servers": [
+    {
+      "url": "http://192.168.10.221:4020",
+      "description": "Ambiente de desenvolvimento"
+    },
+    {
+      "url": "http://192.168.10.221:4010",
+      "description": "Ambiente de produção"
+    },
+    {
+      "url": "http://192.168.10.221:4030",
+      "description": "Ambiente de simualção"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Configurações"
+    },
+    {
+      "name": "Funcionarios"
+    },
+    {
+      "name": "Informações"
+    },
+    {
+      "name": "Leitos Hospitalares"
+    },
+    {
+      "name": "Lista de verificação"
+    },
+    {
+      "name": "Login"
+    },
+    {
+      "name": "Pesquisa de satisfação"
+    },
+    {
+      "name": "Procedimentos de faturamento"
+    },
+    {
+      "name": "Produtos"
+    },
+    {
+      "name": "Usuários"
+    }
+  ],
+  "paths": {
+    "/configuration/database": {
+      "post": {
+        "tags": [
+          "Configurações"
+        ],
+        "summary": "Banco de dados",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Requisição realizada com sucesso."
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "userDB": {
+                    "type": "string"
+                  },
+                  "passwordDB": {
+                    "type": "string"
+                  },
+                  "connectDB": {
+                    "type": "string"
+                  },
+                  "dirDB": {
+                    "type": "string"
+                  },
+                  "secretKeyDB": {
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": true
+              },
+              "example": {
+                "userDB": "{{userDB}}",
+                "passwordDB": "{{passDB}}",
+                "connectDB": "{{hostDB}}/{{enviromentDB}}",
+                "dirDB": "{{dirDB}}",
+                "secretKeyDB": "{{secrectKeyDB}}"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/login": {
+      "post": {
+        "tags": [
+          "Login"
+        ],
+        "summary": "Login",
+        "description": "## Login\n\nRealiza a autenticação do usuário no sistema e retorna as informações necessárias para acesso às rotas protegidas.\n\n## Método\n\nPOST\n\n## Endpoint\n\n`/login`\n\n## Autenticação\n\nNão requer token.\n\n## Body\n\n- **username** (string, obrigatório): Nome de usuário cadastrado.\n    \n- **password** (string, obrigatório): Senha do usuário.\n    \n\n## Regras de Negócio\n\n- O usuário e a senha devem ser válidos.\n    \n- Caso as credenciais estejam incorretas, a autenticação é recusada.\n    \n\n## Respostas Esperadas\n\n- **200**: Login realizado com sucesso.\n    \n- **401**: Usuário ou senha inválidos.",
+        "responses": {
+          "200": {
+            "description": "Success Response",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Success_Response": {
+                    "summary": "Success Response",
+                    "value": {
+                      "tokens": "chave_token",
+                      "role": "tipo_de_role"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bad Response",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Bad_Response": {
+                    "summary": "Bad Response",
+                    "value": {
+                      "error": "Usuário e senha são obrigatorios!"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": true
+              },
+              "example": {
+                "username": "{{userLogged}}",
+                "password": "{{passLogged}}"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/employees/all": {
+      "get": {
+        "tags": [
+          "Funcionarios"
+        ],
+        "summary": "Todos os funcionarios",
+        "description": "## All Employees\n\nRetorna a lista de todos os funcionários cadastrados no sistema.\n\n## Método\n\nGET\n\n## Endpoint\n\n`/employees/all`\n\n## Autenticação\n\nBearer Token obrigatório no header `Authorization`.\n\n## Parâmetros\n\nNão possui parâmetros.\n\n## Body\n\nNão se aplica.\n\n## Regras de Negócio\n\n- Apenas usuários autenticados podem acessar esta rota.\n    \n- Retorna informações básicas dos funcionários.\n    \n\n## Resposta de Sucesso\n\nRetorna um array de funcionários no seguinte formato:\n\n``` json\n[\n  {\n    \"CD_FUNC\": 501,\n    \"NM_FUNC\": \"Maria Santos\"\n  },\n  {\n    \"CD_FUNC\": 502,\n    \"NM_FUNC\": \"João Almeida\"\n  }\n]\n\n ```",
+        "responses": {
+          "200": {
+            "description": "Success response",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Success_response": {
+                    "summary": "Success response",
+                    "value": [
+                      {
+                        "CD_FUNC": 123,
+                        "NM_FUNC": "JOÃOZINHO DA SILVA E SILVA"
+                      },
+                      {
+                        "CD_FUNC": 321,
+                        "NM_FUNC": "SILVA DA SILVA JOAOZINHO"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autenticado ou token inválido."
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/hospital-beds/status": {
+      "get": {
+        "tags": [
+          "Leitos Hospitalares"
+        ],
+        "summary": "Situação dos leitos hospitalares",
+        "description": "## Hospital Beds Status\n\nRetorna o status atual dos leitos hospitalares.\n\n## Método\n\nGET\n\n## Endpoint\n\n`/hospaital-beds/status`\n\n## Autenticação\n\nBearer Token obrigatório no header `Authorization`.\n\n## Parâmetros\n\nNão possui parâmetros.\n\n## Body\n\nNão se aplica.\n\n## Regras de Negócio\n\n- Apenas usuários autenticados podem acessar esta rota.\n    \n- Retorna a situação atual dos leitos hospitalares do sistema.\n    \n\n## Resposta de Sucesso\n\nRetorna a lista de leitos e seus respectivos status.\n\n## Exemplo de Resposta\n\n``` json\n[\n    {\n        \"DS_UNID_INT\": \"UTI GERAL ADULTO\",\n        \"STATUS\": \"POS HIGIENIZACAO\",\n        \"TOTAL\": 1\n    },\n    {\n        \"DS_UNID_INT\": \"POSTO I\",\n        \"STATUS\": \"PARA HIGIENIZACAO\",\n        \"TOTAL\": 1\n    }\n]\n\n ```",
+        "responses": {
+          "200": {
+            "description": "Success response",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Success_response": {
+                    "summary": "Success response",
+                    "value": [
+                      {
+                        "DS_UNID_INT": "POSTO II",
+                        "STATUS": "POS HIGIENIZACAO",
+                        "TOTAL": 2
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autenticado ou token inválido."
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/hospital-beds/cleaning-request": {
+      "get": {
+        "tags": [
+          "Leitos Hospitalares"
+        ],
+        "summary": "Solicitações de limpeza",
+        "description": "## Cleaning Request\n\nRetorna as solicitações de limpeza hospitalares.\n\n## Método\n\nGET\n\n## Endpoint\n\n`/hospital-beds/cleaning-request`\n\n## Autenticação\n\nBearer Token obrigatório no header `Authorization`.\n\n## Parâmetros\n\nNão possui parâmetros.\n\n## Body\n\nNão se aplica.\n\n## Regras de Negócio\n\n- Apenas usuários autenticados podem realizar a solicitação.\n    \n- O leito deve existir no sistema.\n    \n\n## Exemplo de Request\n\n``` json\n{\n    \"cleaningRequests\": [\n        {\n            \"DS_UNID_INT\": \"POSTO II\",\n            \"STATUS\": \"PARA HIGIENIZACAO\",\n            \"DS_LEITO\": \"APARTAMENTO 213\",\n            \"CD_SOLIC_LIMPEZA\": 94903,\n            \"DT_SOLIC_LIMPEZA\": \"2026-01-09T19:56:54.000Z\",\n            \"TP_SOLICITACAO\": \"Concorrente\",\n            \"NM_PACIENTE\": \"TESTE TESTE TESTE\"\n        },\n        {\n            \"DS_UNID_INT\": \"POSTO I\",\n            \"STATUS\": \"PARA HIGIENIZACAO\",\n            \"DS_LEITO\": \"APARTAMENTO 116\",\n            \"CD_SOLIC_LIMPEZA\": 94904,\n            \"DT_SOLIC_LIMPEZA\": \"2026-01-09T19:57:08.000Z\",\n            \"TP_SOLICITACAO\": \"Concorrente\",\n            \"NM_PACIENTE\": \"ASDASDASD\"\n        }\n    ]\n}\n\n ```",
+        "responses": {
+          "200": {
+            "description": "New Request",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "New_Request": {
+                    "summary": "New Request",
+                    "value": {
+                      "cleaningRequests": [
+                        {
+                          "DS_UNID_INT": "UTI GERAL ADULTO",
+                          "STATUS": "PARA HIGIENIZACAO",
+                          "DS_LEITO": "U.T.I - LEITO 01",
+                          "CD_SOLIC_LIMPEZA": 123,
+                          "DT_SOLIC_LIMPEZA": "2025-09-29T18:06:50.000Z",
+                          "TP_SOLICITACAO": "Concorrente",
+                          "NM_PACIENTE": "EXPEDITO CALISTA DE MOURA"
+                        },
+                        {
+                          "DS_UNID_INT": "UTI GERAL ADULTO",
+                          "STATUS": "PARA HIGIENIZACAO",
+                          "DS_LEITO": "U.T.I - LEITO 03",
+                          "CD_SOLIC_LIMPEZA": 321,
+                          "DT_SOLIC_LIMPEZA": "2025-09-29T18:07:11.000Z",
+                          "TP_SOLICITACAO": "Concorrente",
+                          "NM_PACIENTE": "RITA DA SILVA ROCHA "
+                        },
+                        {
+                          "DS_UNID_INT": "POSTO II",
+                          "STATUS": "PARA HIGIENIZACAO",
+                          "DS_LEITO": "ENFERMARIA 204 - L1",
+                          "CD_SOLIC_LIMPEZA": 312,
+                          "DT_SOLIC_LIMPEZA": "2025-11-11T17:26:12.000Z",
+                          "TP_SOLICITACAO": "Terminal",
+                          "NM_PACIENTE": "BENEFICIARIO TESTE MASCULINO"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autenticado ou token inválido."
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/hospital-beds/request-waiting-confirmation": {
+      "get": {
+        "tags": [
+          "Leitos Hospitalares"
+        ],
+        "summary": "Solicitações aguardando confirmação",
+        "description": "## Cleaning Requests Waiting Confirmation\n\nRetorna a lista de solicitações de limpeza de leitos que estão aguardando confirmação.\n\n## Método\n\nGET\n\n## Endpoint\n\n`/hospita-bdes/request-waiting-confirmation`\n\n## Autenticação\n\nBearer Token obrigatório no header `Authorization`.\n\n## Parâmetros\n\nNão possui parâmetros.\n\n## Body\n\nNão se aplica.\n\n## Regras de Negócio\n\n- Apenas usuários autenticados podem acessar esta rota.\n    \n- Retorna apenas solicitações que ainda não foram confirmadas.\n    \n- As informações são utilizadas para controle e acompanhamento operacional.\n    \n\n## Resposta de Sucesso\n\nRetorna um array de solicitações de limpeza pendentes de confirmação.\n\n## Exemplo de Resposta\n\n``` json\n{\n    \"waitingConfirmations\": [\n        {\n            \"DS_UNID_INT\": \"UTI GERAL ADULTO\",\n            \"STATUS\": \"POS HIGIENIZACAO\",\n            \"DS_LEITO\": \"U.T.I - LEITO 05\",\n            \"CD_SOLIC_LIMPEZA\": 94908,\n            \"DT_SOLIC_LIMPEZA\": \"2026-01-09T20:46:53.000Z\",\n            \"TP_SOLICITACAO\": \"Concorrente\",\n            \"NM_PACIENTE\": \"OCIMAR MICHEL CARVALHO DE SOUSA\"\n        },\n        {\n            \"DS_UNID_INT\": \"POSTO I\",\n            \"STATUS\": \"POS HIGIENIZACAO\",\n            \"DS_LEITO\": \"APARTAMENTO 113\",\n            \"CD_SOLIC_LIMPEZA\": 94902,\n            \"DT_SOLIC_LIMPEZA\": \"2026-01-09T19:56:40.000Z\",\n            \"TP_SOLICITACAO\": \"Concorrente\",\n            \"NM_PACIENTE\": \"ASDASDASD\"\n        }\n   ]\n}\n\n ```",
+        "responses": {
+          "200": {
+            "description": "Success response",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Success_response": {
+                    "summary": "Success response",
+                    "value": {
+                      "waitingConfirmations": [
+                        {
+                          "DS_UNID_INT": "POSTO II",
+                          "STATUS": "POS HIGIENIZACAO",
+                          "DS_LEITO": "APARTAMENTO 222",
+                          "CD_SOLIC_LIMPEZA": 94884,
+                          "DT_SOLIC_LIMPEZA": "2025-09-29T18:05:17.000Z",
+                          "TP_SOLICITACAO": "Concorrente",
+                          "NM_PACIENTE": "SADDADSDSAADADSSADSASASAD"
+                        },
+                        {
+                          "DS_UNID_INT": "POSTO I",
+                          "STATUS": "POS HIGIENIZACAO",
+                          "DS_LEITO": "APARTAMENTO 109",
+                          "CD_SOLIC_LIMPEZA": 94888,
+                          "DT_SOLIC_LIMPEZA": "2025-09-29T18:06:42.000Z",
+                          "TP_SOLICITACAO": "Concorrente",
+                          "NM_PACIENTE": "KKKKKKKKKKKKKKKKKKKKKKK"
+                        },
+                        {
+                          "DS_UNID_INT": "POSTO II",
+                          "STATUS": "POS HIGIENIZACAO",
+                          "DS_LEITO": "APARTAMENTO 219",
+                          "CD_SOLIC_LIMPEZA": 94892,
+                          "DT_SOLIC_LIMPEZA": "2025-11-07T18:44:07.000Z",
+                          "TP_SOLICITACAO": "Terminal",
+                          "NM_PACIENTE": "DENYSE HELLEN DA SILVA SANTOS"
+                        },
+                        {
+                          "DS_UNID_INT": "POSTO I",
+                          "STATUS": "POS HIGIENIZACAO",
+                          "DS_LEITO": "APARTAMENTO 106",
+                          "CD_SOLIC_LIMPEZA": 94894,
+                          "DT_SOLIC_LIMPEZA": "2025-11-11T20:15:57.000Z",
+                          "TP_SOLICITACAO": "Concorrente",
+                          "NM_PACIENTE": "JEFFERSON LIMA GONCALVES"
+                        }
+                      ]
+                    }
+                  },
+                  "No_requests_are_pending_confirmation": {
+                    "summary": "No requests are pending confirmation",
+                    "value": {
+                      "message": "Não há solicitações aguardando confirmação"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autenticado ou token inválido."
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/hospital-beds/update-cleaning-request/{requestId}": {
+      "patch": {
+        "tags": [
+          "Leitos Hospitalares"
+        ],
+        "summary": "Atualizar solicitação de limpeza",
+        "description": "## Update Cleaning Request\n\nAtualiza o status de uma solicitação de limpeza de leito hospitalar.\n\n## Método\n\nPATCH\n\n## Endpoint\n\n`/hospital-beds/update-cleaning-request/{requestId}`\n\n## Autenticação\n\nBearer Token obrigatório no header `Authorization`.\n\n## Parâmetros\n\n- **requestId** (path, obrigatório): Identificador da solicitação de limpeza.\n    \n\n## Body\n\nNão se aplica.\n\n## Regras de Negócio\n\n- Apenas usuários autenticados podem atualizar a solicitação.\n    \n- A solicitação deve existir no sistema.\n    \n- Após finalizada, a solicitação não pode ser alterada novamente.\n    \n\n## Exemplo de Request\n\n``` json\n{\n  \"updateCleaningRequest\": \"Limpeza iniciada com sucesso\"\n}\n\n ```\n\n## Respostas Esperadas\n\n- **200**: Limpeza iniciada com sucesso.\n    \n- **400**: Status inválido ou transição não permitida.\n    \n- **401**: Token ausente, inválido ou expirado.\n    \n- **404**: Solicitação não encontrada.",
+        "responses": {
+          "200": {
+            "description": "Request started",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Request_started": {
+                    "summary": "Request started",
+                    "value": {
+                      "updateCleaningRequest": "Limpeza iniciada com sucesso"
+                    }
+                  },
+                  "After_cleaning_started": {
+                    "summary": "After cleaning started",
+                    "value": {
+                      "updateCleaningRequest": "Pos higienizacao iniciada com sucesso"
+                    }
+                  },
+                  "Request_completed": {
+                    "summary": "Request completed",
+                    "value": {
+                      "updateCleaningRequest": "Solicitação aguardando confirmação ou já finalizada"
+                    }
+                  },
+                  "Request_not_found": {
+                    "summary": "Request not found",
+                    "value": {
+                      "updateCleaningRequest": "Solicitação não encontrada"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid token",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Invalid_token": {
+                    "summary": "Invalid token",
+                    "value": {
+                      "message": "Token não fornecido"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Resposta documentada na descrição da operação."
+          },
+          "404": {
+            "description": "Resposta documentada na descrição da operação."
+          }
+        },
+        "parameters": [
+          {
+            "name": "requestId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/hospital-beds/refuse-cleaning-request/{requestId}": {
+      "patch": {
+        "tags": [
+          "Leitos Hospitalares"
+        ],
+        "summary": "Recusa da solicitação de limpeza",
+        "description": "## Refuse Cleaning Request\n\nRecusa uma solicitação de limpeza de leito hospitalar, quando a solicitação não atende aos critérios esperados.\n\n## Método\n\nPATCH\n\n## Endpoint\n\n`/hospital-beds/refuse-cleaning-request/{requestId}`\n\n## Autenticação\n\nBearer Token obrigatório no header `Authorization`.\n\n## Parâmetros\n\n- **requestId** (path, obrigatório): Identificador da solicitação de limpeza.\n    \n\n## Body\n\nNão se aplica.\n\n## Regras de Negócio\n\n- Apenas usuários autenticados podem realizar a recusa.\n    \n- A solicitação deve existir no sistema.\n    \n- A solicitação deve estar em estado compatível para recusa.\n    \n- Solicitações já finalizadas não podem ser recusadas.\n    \n\n## Respostas\n\n### Recusa realizada com sucesso\n\n``` json\n{\n  \"refuseCleaningRequest\": \"Solicitação recusada com sucesso\"\n}\n\n ```",
+        "responses": {
+          "200": {
+            "description": "Refuse confirm",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Refuse_confirm": {
+                    "summary": "Refuse confirm",
+                    "value": {
+                      "refuseCleaningRequest": "Solicitação de limpeza recusada com sucesso"
+                    }
+                  },
+                  "Request_not_found": {
+                    "summary": "Request not found",
+                    "value": {
+                      "refuseCleaningRequest": "Solicitação não encontrada"
+                    }
+                  },
+                  "Request_still_in_progress": {
+                    "summary": "Request still in progress",
+                    "value": {
+                      "refuseCleaningRequest": "Solicitação não esta em estado de limpeza finalizada para recusa"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autenticado ou token inválido."
+          }
+        },
+        "parameters": [
+          {
+            "name": "requestId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/hospital-beds/confirm-cleaning-request/{requestId}": {
+      "patch": {
+        "tags": [
+          "Leitos Hospitalares"
+        ],
+        "summary": "Confirmação da solicitação de limpeza",
+        "description": "## Confirm Cleaning Request\n\nConfirma uma solicitação de limpeza de leito hospitalar, vinculando um funcionário responsável pela execução.\n\n## Método\n\nPATCH\n\n## Endpoint\n\n`/hospital-beds/confirm-cleaning-request/{requestId}`\n\n## Autenticação\n\nBearer Token obrigatório no header `Authorization`.\n\n## Parâmetros\n\n- **requestId** (path, obrigatório): Identificador da solicitação de limpeza.\n    \n\n## Body\n\n- **employee** (number, obrigatório): Identificador do funcionário responsável pela limpeza.\n    \n- **observation** (string, opcional): Observação complementar sobre a confirmação da limpeza.\n    \n\n## Regras de Negócio\n\n- Apenas usuários autenticados podem confirmar solicitações.\n    \n- O funcionário informado deve existir no sistema.\n    \n- A solicitação deve existir e não pode estar previamente confirmada.\n    \n- Após confirmada, a solicitação segue o fluxo normal de finalização.\n    \n\n## Exemplo de Request\n\n``` json\n{\n  \"employee\": 845,\n  \"observation\": \"Limpeza iniciada conforme protocolo\"\n}\n\n ```",
+        "responses": {
+          "200": {
+            "description": "Employee not found",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Employee_not_found": {
+                    "summary": "Employee not found",
+                    "value": {
+                      "confirmCleaningRequest": "Funcionário não encontrado"
+                    }
+                  },
+                  "Request_not_found_or_confirmed": {
+                    "summary": "Request not found or confirmed",
+                    "value": {
+                      "confirmCleaningRequest": "Solicitação não encontrada ou já foi confirmada anteriormente"
+                    }
+                  },
+                  "Confirmation_complete": {
+                    "summary": "Confirmation complete",
+                    "value": {
+                      "confirmCleaningRequest": "Solicitação de limpeza confirmada com sucesso"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autenticado ou token inválido."
+          }
+        },
+        "parameters": [
+          {
+            "name": "requestId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "observation": {
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": true
+              },
+              "example": {
+                "observation": "{{observation}}"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/check-list/all-hospital-beds/": {
+      "get": {
+        "tags": [
+          "Lista de verificação"
+        ],
+        "summary": "Todos os leitos hospialares",
+        "description": "## Todos os leitos hospitalares\n\nRetorna o status atual de todos os leitos hospitalares.\n\n## Método\n\nGET\n\n## Endpoint\n\n`/all-hospaital-beds/status`\n\n## Autenticação\n\nBearer Token obrigatório no header `Authorization`.\n\n## Parâmetros\n\nNão possui parâmetros.\n\n## Body\n\nNão se aplica.\n\n## Regras de Negócio\n\n- Apenas usuários autenticados podem acessar esta rota.\n    \n- Retorna a situação atual de todos os leitos hospitalares.\n    \n\n## Resposta de Sucesso\n\nRetorna a lista de leitos e seus respectivos status: V(Vago) (O)Ocupado.\n\n## Exemplo de Resposta\n\n``` json\n[\n    {\n        \"DS_UNID_INT\": \"INTERNACAO 2\",\n        \"DS_LEITO\": \"APARTAMENTO 210\"\n        \"STATUS\": \"VAGO\"\n    },\n    {\n        \"DS_UNID_INT\": \"INTERNACAO 2\",\n        \"DS_LEITO\": \"APARTAMENTO 201\"\n        \"STATUS\": \"OCUPADO\"\n    }\n]\n\n ```",
+        "responses": {
+          "200": {
+            "description": "Requisição realizada com sucesso."
+          },
+          "401": {
+            "description": "Não autenticado ou token inválido."
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/check-list/check-list-items": {
+      "post": {
+        "tags": [
+          "Lista de verificação"
+        ],
+        "summary": "Formulario da lista de verificacao",
+        "description": "## Formulário de verificação\n\nRealiza a autenticação do usuário no sistema e retorna as informações necessárias para acesso às rotas protegidas.\n\n## Método\n\nPOST\n\n## Endpoint\n\n`/check-list/check-list-items`\n\n## Autenticação\n\nRequer token\n\n## Body\n\n> Keys em formato (format-data):  \nsignature File  \ndados text \n  \n\n## Regras de Negócio\n\nStartFragment\n\n## Estrutura da key `dados`\n\nA key `dados` deve ser enviada como **string JSON**:\n\n``` json\n{  \n\"solicLimp\": null,\n\"tipo\": 1,  \n\"userName\": \"jefferson\",  \n\"leito\": 123,  \n\"tv\": \"S\",  \n\"cama\": \"S\",  \n\"travesseiro\": \"S\",  \n\"enxoval\": \"S\",  \n\"sofa\": \"S\",  \n\"poltrona\": \"S\",  \n\"escada\": \"N\",  \n\"toalha\": NULL,  \n\"telefone\": NULL,  \n\"observacao\": \"S\",  \n\"cd_atendimento\": 123123\n}\n\n ```\n\n## Respostas Esperadas\n\n- **200**: Registro inserido com sucesso.\n    \n- **401**:",
+        "responses": {
+          "200": {
+            "description": "Sucesso: Registro inserido",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Sucesso_Registro_inserido": {
+                    "summary": "Sucesso: Registro inserido",
+                    "value": "Formulário de checklist inserido com sucesso"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro: Duplicidade de parametros",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Erro_Duplicidade_de_parametros": {
+                    "summary": "Erro: Duplicidade de parametros",
+                    "value": {
+                      "error": "ORA-20003: Ja existe check-list com os parametros informados\nORA-06512: em \"DBAHUMS.SP_INSERT_CHECK_LIST_2J_HUMS\", line 71\nORA-06512: em line 3"
+                    }
+                  },
+                  "Erro_Atendimento_n_o_interna_o": {
+                    "summary": "Erro: Atendimento não é internação",
+                    "value": {
+                      "error": "ORA-20004: Atendimento nao do tipo INTERNACAO\nORA-06512: em \"DBAHUMS.SP_INSERT_CHECK_LIST_2J_HUMS\", line 79\nORA-06512: em line 3"
+                    }
+                  },
+                  "Erro_Leito_inv_lido": {
+                    "summary": "Erro: Leito inválido",
+                    "value": {
+                      "error": "ORA-20001: Leito informado, inativo ou nao existe!\nORA-06512: em \"DBAHUMS.SP_INSERT_CHECK_LIST_2J_HUMS\", line 59\nORA-06512: em line 3"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Resposta documentada na descrição da operação."
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "signature": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "dados": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "signature",
+                  "dados"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/check-list/verify-checkout/{cdLeito}": {
+      "get": {
+        "tags": [
+          "Lista de verificação"
+        ],
+        "summary": "Verificação de entrada realizada",
+        "description": "## Verificação de entrada realizada\n\nExecuta pesquisa de checkin já cadastrados de acordo com leito informado e retorna os campos preenchidos e nulos\n\n## Método\n\nGET\n\n## Endpoint\n\n`/check-list/verify-checkout/Código_do_leito`\n\n## Autenticação\n\nRequer token\n\n## Paramêtros\n\n> Código do leito \n  \n\n## Respostas Esperadas\n\n- **200**: Json com os dados do checkin já realizado\n    \n- 501: Nao existe checkin para o leito informado\n    \n- 500:",
+        "responses": {
+          "200": {
+            "description": "Success response",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Success_response": {
+                    "summary": "Success response",
+                    "value": {
+                      "CD_USUARIO": "jeff",
+                      "CD_LEITO": 929,
+                      "SN_TV": "S",
+                      "SN_CAMA": "S",
+                      "SN_TRAVESSEIRO": "S",
+                      "SN_ENXOVAL": "S",
+                      "SN_SOFA": "S",
+                      "SN_POLTRONA": "S",
+                      "SN_ESCADA": null,
+                      "SN_TOALHA": null,
+                      "SN_TELEFONE": null,
+                      "SN_CADEIRA": null,
+                      "SN_CONTROLE_TV": "S",
+                      "SN_CONTROLE_AR": null,
+                      "SN_FRIGOBAR": "S",
+                      "SN_SUPORTE_SORO": null,
+                      "SN_CARRINHO_REFEICAO": null,
+                      "SN_PERTENCES_PESSOAIS": "S",
+                      "DS_PERTENCES": "SSSSS",
+                      "DT_REGISTRO": "2026-08-03T11:42:50.000Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "501": {
+            "description": "Bad response",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Bad_response": {
+                    "summary": "Bad response",
+                    "value": {
+                      "message": "Nao existe checkin para o leito informado"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autenticado ou token inválido."
+          }
+        },
+        "parameters": [
+          {
+            "name": "cdLeito",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/users/all": {
+      "get": {
+        "tags": [
+          "Usuários"
+        ],
+        "summary": "Todos os usuários",
+        "description": "## List Users\n\nRetorna a lista de usuários cadastrados no sistema com suas informações básicas.\n\n## Método\n\nGET\n\n## Endpoint\n\n`/users/all`\n\n## Autenticação\n\nBearer Token obrigatório no header `Authorization`.\n\n## Parâmetros\n\nNão possui parâmetros.\n\n## Body\n\nNão se aplica.\n\n## Regras de Negócio\n\n- Apenas usuários autenticados podem acessar esta rota.\n    \n- O retorno contém informações básicas dos usuários.\n    \n\n## Resposta de Sucesso\n\nRetorna um array de usuários no seguinte formato:\n\n``` json\n[\n  {\n    \"CD_USUARIO\": \"Jefferson\",\n    \"NM_USUARIO\": \"jefferson Lima\",\n    \"ROLE\": \"Administrador\"\n  }\n]\n\n ```",
+        "responses": {
+          "200": {
+            "description": "Success response",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Success_response": {
+                    "summary": "Success response",
+                    "value": [
+                      {
+                        "CD_USUARIO": "teste01",
+                        "NM_USUARIO": "teste 01 sousa machado",
+                        "ROLE": "Administrador"
+                      },
+                      {
+                        "CD_USUARIO": "teste02",
+                        "NM_USUARIO": "teste 02 da silva rocha",
+                        "ROLE": "Normal"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autenticado ou token inválido."
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/users/new": {
+      "post": {
+        "tags": [
+          "Usuários"
+        ],
+        "summary": "Novo usuário",
+        "description": "## New User\n\nCria um novo usuário no sistema.\n\n## Método\n\nPOST\n\n## Endpoint\n\n`/users/new`\n\n## Autenticação\n\nBearer Token obrigatório no header `Authorization`.\n\n## Parâmetros\n\nNão possui parâmetros.\n\n## Body\n\n- **USERNAME** (string, obrigatório): Código identificador do usuário.\n    \n- **NAME** (string, obrigatório): Nome completo do usuário.\n    \n- **PASSWORD** (string, obrigatório): Senha de acesso.\n    \n- **ROLE** (string, obrigatório): Perfil de acesso do usuário.\n    \n\n## Regras de Negócio\n\n- O código do usuário deve ser único.\n    \n- A senha deve atender aos critérios mínimos de segurança definidos pelo sistema.\n    \n- Apenas usuários autorizados podem criar novos usuários.\n    \n\n## Resposta de Sucesso\n\nUsuário criado com sucesso.\n\n## Respostas Esperadas\n\n- **201**: Usuário criado com sucesso.\n    \n- **400**: Dados inválidos ou incompletos.\n    \n- **401**: Token ausente, inválido ou expirado.\n    \n- **409**: Usuário já existente.",
+        "responses": {
+          "201": {
+            "description": "Success response",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Success_response": {
+                    "summary": "Success response",
+                    "value": {
+                      "message": "Usuário criado com sucesso!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid user",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Invalid_user": {
+                    "summary": "Invalid user",
+                    "value": {
+                      "message": "Usuário, senha, nome completo e regra são obrigatórios"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid Token",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Invalid_Token": {
+                    "summary": "Invalid Token",
+                    "value": {
+                      "message": "Token não fornecido"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "User exists",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "User_exists": {
+                    "summary": "User exists",
+                    "value": {
+                      "message": "Usuário já existe!"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "role": {
+                    "type": "string"
+                  },
+                  "codFunc": {
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": true
+              },
+              "example": {
+                "username": "{{novo_usuario}}",
+                "password": "{{novo_senha}}",
+                "name": "{{novo_nome_completo}}",
+                "role": "{{novo_tipo_de_usuario}}",
+                "codFunc": "{{codigoFuncionario}}"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/alter-password": {
+      "patch": {
+        "tags": [
+          "Usuários"
+        ],
+        "summary": "Alteração de senha",
+        "description": "## Alter Password\n\nAltera a senha de um usuário já cadastrado no sistema.\n\n## Método\n\nPATCH\n\n## Endpoint\n\n`/users/alter-password`\n\n## Autenticação\n\nBearer Token obrigatório no header `Authorization`.\n\n## Parâmetros\n\nNão possui parâmetros.\n\n## Body\n\n- **USERNAME** (string, obrigatório): Código identificador do usuário.\n    \n- **NEWPASSWORD** (string, obrigatório): Nova senha a ser definida.\n    \n\n## Regras de Negócio\n\n- A senha atual deve ser válida.\n    \n- A nova senha deve atender aos critérios mínimos de segurança.\n    \n- O usuário deve estar ativo no sistema.\n    \n\n## Resposta de Sucesso\n\nSenha alterada com sucesso.\n\n## Respostas Esperadas\n\n- **200**: Senha alterada com sucesso.\n    \n- **400**: Dados inválidos ou incompletos.\n    \n- **401**: Token ausente, inválido ou expirado.",
+        "responses": {
+          "200": {
+            "description": "Success response",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Success_response": {
+                    "summary": "Success response",
+                    "value": {
+                      "message": "Senha alterada com sucesso!"
+                    }
+                  },
+                  "User_not_found": {
+                    "summary": "User not found",
+                    "value": {
+                      "message": "Usuário não encontrado"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid Token",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Invalid_Token": {
+                    "summary": "Invalid Token",
+                    "value": {
+                      "message": "Token não fornecido"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Resposta documentada na descrição da operação."
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string"
+                  },
+                  "newPassword": {
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": true
+              },
+              "example": {
+                "username": "{{usu}}",
+                "newPassword": "{{pass}}"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/inactivate/{inativar_usuario}": {
+      "patch": {
+        "tags": [
+          "Usuários"
+        ],
+        "summary": "Inativação de usuário",
+        "description": "## Inactivate User\n\nInativa um usuário no sistema, impedindo seu acesso às funcionalidades.\n\n## Método\n\nPATCH\n\n## Endpoint\n\n`/users/inactivate/{usuario}`\n\n## Autenticação\n\nBearer Token obrigatório no header `Authorization`.\n\n## Parâmetros\n\n- **usuario** (path, obrigatório): Código identificador do usuário a ser inativado.\n    \n\n## Body\n\nNão se aplica.\n\n## Regras de Negócio\n\n- Apenas usuários autorizados podem inativar outros usuários.\n    \n- O usuário inativado não poderá mais realizar autenticação no sistema.\n    \n- A operação não remove o usuário, apenas altera seu status.\n    \n\n## Resposta de Sucesso\n\nUsuário inativado com sucesso.\n\n## Respostas Esperadas\n\n- **200**: Usuário inativado com sucesso.\n    \n- **401**: Token ausente, inválido ou expirado.\n    \n- **404**: Usuário não encontrado.",
+        "responses": {
+          "200": {
+            "description": "Bad response",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Bad_response": {
+                    "summary": "Bad response",
+                    "value": {
+                      "message": "Usuário inativado!"
+                    }
+                  },
+                  "Success_response": {
+                    "summary": "Success response",
+                    "value": {
+                      "message": "Usuário inativado!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid Token",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Invalid_Token": {
+                    "summary": "Invalid Token",
+                    "value": {
+                      "message": "Token não fornecido"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resposta documentada na descrição da operação."
+          }
+        },
+        "parameters": [
+          {
+            "name": "inativar_usuario",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/users/user-alter/{username}": {
+      "patch": {
+        "tags": [
+          "Usuários"
+        ],
+        "summary": "Alteração de usuário",
+        "description": "StartFragment\n\nAtualiza **dados parciais** de um usuário existente identificado pelo `username`.\n\n### Descrição\n\nEssa rota permite alterar informações específicas do usuário sem precisar reenviar o objeto inteiro. Atualiza apenas os campos enviados no body.\n\n---\n\n### Parâmetros de rota (Path Params)\n\n| Parâmetro | Tipo | Obrigatório | Descrição |\n| --- | --- | --- | --- |\n| username | string | Sim | Identificador único do usuário |\n\nExemplo:\n\n```\n/users/user-alter/jose.silva\n\n ```\n\n---\n\n### Body (JSON)\n\n```\n{\n  \"name\": \"string\",\n  \"role\": \"string\",\n  \"cpf\": 12345678900\n}\n\n ```\n\n#### Campos\n\n| Campo | Tipo | Obrigatório | Descrição |\n| --- | --- | --- | --- |\n| name | string | Não | Nome completo do usuário |\n| role | string | Não | Perfil / função do usuário |\n| cpf | number | Não | CPF do usuário (somente números) |\n\n### Exemplo de requisição\n\n```\nPATCH /users/user-alter/jose.silva\nContent-Type: application/json\n\n ```\n\n```\n{\n  \"role\": \"ADMIN\"\n}\n\n ```\n\n---\n\n### Respostas\n\n#### ✅ 200 – Sucesso\n\n```\n{\n  \"message\": \"User updated successfully\"\n}\n\n ```\n\n#### ❌ 404 – Usuário não encontrado\n\n```\n{\n  \"error\": \"User not found\"\n}\n\n ```\n\n#### ❌ 400 – Dados inválidos\n\n```\n{\n  \"error\": \"Invalid request body\"\n}\n\n ```\n\n#### ❌ 500 – Erro interno\n\n```\n{\n  \"error\": \"Internal server error\"\n}\n\n ```",
+        "responses": {
+          "401": {
+            "description": "Invalid Token",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Invalid_Token": {
+                    "summary": "Invalid Token",
+                    "value": {
+                      "message": "Token não fornecido"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "role": {
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": true
+              },
+              "example": {
+                "role": "{{role}}"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/inf/logo": {
+      "get": {
+        "tags": [
+          "Informações"
+        ],
+        "summary": "Imagem da marca",
+        "description": "## Logo Image\n\nRetorna a imagem do logo do sistema.\n\n## Método\n\nGET\n\n## Endpoint\n\n`/inf/logo`\n\n## Autenticação\n\nNão requer autenticação.\n\n## Parâmetros\n\nNão possui parâmetros.\n\n## Body\n\nNão se aplica.\n\n## Regras de Negócio\n\n- A rota é pública e pode ser acessada sem autenticação.\n    \n- Retorna a imagem do logo padrão do sistema.\n    \n\n## Resposta de Sucesso\n\nRetorna o arquivo de imagem do logo.\n\n## Respostas Esperadas\n\n- **200**: Imagem retornada com sucesso.\n    \n- **404**: Logo não encontrado.",
+        "responses": {
+          "404": {
+            "description": "Image not found",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Image_not_found": {
+                    "summary": "Image not found",
+                    "value": "Imagem não encontrada"
+                  }
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success response"
+          }
+        }
+      }
+    },
+    "/inf": {
+      "get": {
+        "tags": [
+          "Informações"
+        ],
+        "summary": "Informações genericas",
+        "description": "## General Informations\n\nRetorna informações gerais do sistema.\n\n## Método\n\nGET\n\n## Endpoint\n\n`/inf`\n\n## Autenticação\n\nNão requer autenticação.\n\n## Parâmetros\n\nNão possui parâmetros.\n\n## Body\n\nNão se aplica.\n\n## Regras de Negócio\n\n- A rota é pública.\n    \n- Retorna informações institucionais e/ou técnicas do sistema.\n    \n\n## Resposta de Sucesso\n\nRetorna as informações gerais do sistema.\n\n## Respostas Esperadas\n\n- **200**: Informações retornadas com sucesso.\n    \n- **401**: Token não fornecido ou expirado.",
+        "responses": {
+          "200": {
+            "description": "Success response",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Success_response": {
+                    "summary": "Success response",
+                    "value": {
+                      "empresa": "empresa",
+                      "usuario": "usuario"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid token",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Invalid_token": {
+                    "summary": "Invalid token",
+                    "value": {
+                      "message": "Token não fornecido"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/satisfaction-survey/{cdPatient}": {
+      "get": {
+        "tags": [
+          "Pesquisa de satisfação"
+        ],
+        "summary": "Pesquisa de satisfação por paciente",
+        "description": "## Satisfaction Survey\n\nBusca a pesquisa de satisfação de um paciente.\n\n### Requisição\n\n**GET**\n\n```\n/satisfaction-survey/{cdPatient}\n\n ```\n\n**Exemplo**\n\n```\n/satisfaction-survey/12345\n\n ```\n\n### Autenticação\n\nEnviar token de acesso no header:\n\n``` javascript\nAuthorization: Bearer <token>\n\n ```\n\n### Dados necessários\n\n- **cdPatient**: código do paciente\n    \n- **Usuário e senha** no corpo da requisição\n    \n\n``` json\n{\n  \"username\": \"usuario\",\n  \"password\": \"senha\"\n}\n\n ```\n\n### Retorno\n\nRetorna as perguntas e respostas da pesquisa de satisfação do paciente.\n\n### Erros comuns\n\n- Token inválido\n    \n- Paciente não encontrado\n    \n- Erro interno\n    \n\nEndFragment",
+        "responses": {
+          "200": {
+            "description": "Requisição realizada com sucesso."
+          }
+        },
+        "parameters": [
+          {
+            "name": "cdPatient",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": true
+              },
+              "example": {
+                "username": "{{userLogged}}",
+                "password": "{{passLogged}}"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/products/all": {
+      "get": {
+        "tags": [
+          "Produtos"
+        ],
+        "summary": "Todos os produtos",
+        "description": "## All Products\n\nRetorna a lista de todos os produtos cadastrados no sistema.\n\n## Método\n\nGET\n\n## Endpoint\n\n`/produts/all`\n\n## Autenticação\n\nBearer Token obrigatório no header `Authorization`.\n\n## Parâmetros\n\nNão possui parâmetros.\n\n## Body\n\nNão se aplica.\n\n## Regras de Negócio\n\n- Apenas usuários autenticados podem acessar esta rota.\n    \n- O retorno inclui informações cadastrais e de controle dos produtos.\n    \n\n## Resposta de Sucesso\n\nRetorna um array de produtos no seguinte formato:\n\n``` json\n[\n  {\n    \"CODIGO_PRODUTO\": 123456,\n    \"DESCRICAO_PRODUTO\": \"teste 00001\",\n    \"DATA_ULTIMA_MOVIMENTACAO\": \"2024-11-24T13:17:32.000Z\",\n    \"DESCRICAO_OBSERVACAO\": \"DUMP AUTOMATICO\",\n    \"PADRONIZADO\": \"NAO\",\n    \"PSICOTROPICO\": \"NAO\",\n    \"BLOQUEIO_DE_COMPRA\": \"NAO\",\n    \"DS_ESPECIE\": \"MEDICAMENTOS\",\n    \"DS_SUB_CLA\": \"MEDICAMENTOS\"\n  }\n]\n\n ```",
+        "responses": {
+          "200": {
+            "description": "Success response",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Success_response": {
+                    "summary": "Success response",
+                    "value": [
+                      {
+                        "CODIGO_PRODUTO": 123456,
+                        "DESCRICAO_PRODUTO": "teste 00001",
+                        "DATA_ULTIMA_MOVIMENTACAO": "2024-11-24T13:17:32.000Z",
+                        "DESCRICAO_OBSERVACAO": "DUMP AUTOMATICO",
+                        "PADRONIZADO": "NAO",
+                        "PSICOTROPICO": "NAO",
+                        "BLOQUEIO_DE_COMPRA": "NAO",
+                        "DS_ESPECIE": "MEDICAMENTOS",
+                        "DS_SUB_CLA": "MEDICAMENTOS"
+                      },
+                      {
+                        "CODIGO_PRODUTO": 123456,
+                        "DESCRICAO_PRODUTO": "teste 00001",
+                        "DATA_ULTIMA_MOVIMENTACAO": "2024-11-24T13:17:32.000Z",
+                        "DESCRICAO_OBSERVACAO": "DUMP AUTOMATICO",
+                        "PADRONIZADO": "NAO",
+                        "PSICOTROPICO": "NAO",
+                        "BLOQUEIO_DE_COMPRA": "NAO",
+                        "DS_ESPECIE": "MEDICAMENTOS",
+                        "DS_SUB_CLA": "MEDICAMENTOS"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid token",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Invalid_token": {
+                    "summary": "Invalid token",
+                    "value": {
+                      "message": "Token não fornecido"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/products/historical": {
+      "get": {
+        "tags": [
+          "Produtos"
+        ],
+        "summary": "Histórico de produtos",
+        "description": "## Historical Products\n\nRetorna o histórico de movimentações dos produtos no sistema.\n\n## Método\n\nGET\n\n## Endpoint\n\n`/products/historical`\n\n## Autenticação\n\nBearer Token obrigatório no header `Authorization`.\n\n## Parâmetros\n\nNão possui parâmetros.\n\n## Body\n\nNão se aplica.\n\n## Regras de Negócio\n\n- Apenas usuários autenticados podem acessar esta rota.\n    \n- As informações retornadas são destinadas a fins de consulta e auditoria.\n    \n\n## Resposta de Sucesso\n\nRetorna um array com o histórico de movimentações no seguinte formato:\n\n``` json\n[\n  {\n    \"CD_HISTORICO\": CódigoDoHistorico,\n    \"DT_HISTORICO\": \"18/12/2025 12:00:17\",\n    \"CD_USUARIO\": \"Jefferson\",\n    \"QTD\": 1\n  }\n]\n\n ```",
+        "responses": {
+          "200": {
+            "description": "Success response",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Success_response": {
+                    "summary": "Success response",
+                    "value": [
+                      {
+                        "CODIGO_HISTORICO": 99,
+                        "DATA_HISTORICO": "18/12/2025 12:00:17",
+                        "USUARIO": "DBAMV",
+                        "QTD": 2
+                      },
+                      {
+                        "CODIGO_HISTORICO": 98,
+                        "DATA_HISTORICO": "18/12/2025 12:00:01",
+                        "USUARIO": "DBAMV",
+                        "QTD": 2
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid token",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Invalid_token": {
+                    "summary": "Invalid token",
+                    "value": {
+                      "message": "Token não fornecido"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/products/detailed-historical/{idHistPro}": {
+      "get": {
+        "tags": [
+          "Produtos"
+        ],
+        "summary": "Histórico de produtos detalhados",
+        "description": "## Detailed Historical\n\nRetorna o detalhamento completo de um histórico de movimentação de produtos, incluindo informações gerais do histórico e os registros associados.\n\n## Método\n\nGET\n\n## Endpoint\n\n`/products/detailed-historical/{IdHistPro}`\n\n## Autenticação\n\nBearer Token obrigatório no header `Authorization`.\n\n## Parâmetros\n\n- **IdHistPro** (path, obrigatório): Identificador do histórico de produto.\n    \n\n## Body\n\nNão se aplica.\n\n## Regras de Negócio\n\n- Apenas usuários autenticados podem acessar esta rota.\n    \n- O histórico retornado deve existir no sistema.\n    \n- Os dados são destinados a consulta e auditoria.\n    \n\n## Resposta de Sucesso\n\nRetorna um objeto contendo as informações do histórico e seus registros associados, no seguinte formato:\n\n``` json\n{\n  \"header\": [\n    {\n      \"CD_HISTORICO\": 99999,\n      \"DT_HISTORICO\": \"16/12/2025 11:44:19\",\n      \"CD_USUARIO\": \"Jefferson\",\n      \"QTD\": 9\n    }\n  ],\n  \"records\": [\n    {\n      \"CD_PRODUTO\": 123456,\n      \"DS_PRODUTO\": \"TEICOPLANINA (TARGOCID) FA C/ 200MG\",\n      \"PAD_ANTERIOR\": \"NAO\",\n      \"PAD_SUGERIDO\": \"SIM\"\n    }\n  ]\n}\n\n ```",
+        "responses": {
+          "200": {
+            "description": "New Request",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "New_Request": {
+                    "summary": "New Request",
+                    "value": [
+                      {
+                        "CD_HIS_PAD_PRO": 59,
+                        "CD_PRODUTO": 10720,
+                        "DS_PRODUTO": "TEICOPLANINA (TARGOCID) FA C/ 200MG",
+                        "PAD_ANTERIOR": "NAO",
+                        "PAD_SUGERIDO": "SIM"
+                      },
+                      {
+                        "CD_HIS_PAD_PRO": 59,
+                        "CD_PRODUTO": 11649,
+                        "DS_PRODUTO": "DOXICICLINA (DOXICLIN) 100MG CPR",
+                        "PAD_ANTERIOR": "NAO",
+                        "PAD_SUGERIDO": "SIM"
+                      },
+                      {
+                        "CD_HIS_PAD_PRO": 59,
+                        "CD_PRODUTO": 13198,
+                        "DS_PRODUTO": "TERBUTALINA (TERBUTIL) INJ 0,5MG AMP 1ML",
+                        "PAD_ANTERIOR": "NAO",
+                        "PAD_SUGERIDO": "SIM"
+                      },
+                      {
+                        "CD_HIS_PAD_PRO": 59,
+                        "CD_PRODUTO": 11408,
+                        "DS_PRODUTO": "METOTREXATO (FAULDMETRO) 50MG 2ML AMP",
+                        "PAD_ANTERIOR": "SIM",
+                        "PAD_SUGERIDO": "NAO"
+                      },
+                      {
+                        "CD_HIS_PAD_PRO": 59,
+                        "CD_PRODUTO": 11343,
+                        "DS_PRODUTO": "ULTIVA (REMIFENTANILA) FA C/2MG",
+                        "PAD_ANTERIOR": "SIM",
+                        "PAD_SUGERIDO": "NAO"
+                      },
+                      {
+                        "CD_HIS_PAD_PRO": 59,
+                        "CD_PRODUTO": 11449,
+                        "DS_PRODUTO": "PROGESTERONA (UTROGESTAN) CAPSULA C/200MG",
+                        "PAD_ANTERIOR": "NAO",
+                        "PAD_SUGERIDO": "SIM"
+                      },
+                      {
+                        "CD_HIS_PAD_PRO": 59,
+                        "CD_PRODUTO": 8010,
+                        "DS_PRODUTO": "NEOCAINA ISOBARICA 0,50% AMPOLA C/4ML (EMBALAG STERILE PACK)",
+                        "PAD_ANTERIOR": "NAO",
+                        "PAD_SUGERIDO": "SIM"
+                      },
+                      {
+                        "CD_HIS_PAD_PRO": 59,
+                        "CD_PRODUTO": 2441,
+                        "DS_PRODUTO": "CAPTOPRIL (CAPOTEN) CPR C/50MG",
+                        "PAD_ANTERIOR": "SIM",
+                        "PAD_SUGERIDO": "NAO"
+                      },
+                      {
+                        "CD_HIS_PAD_PRO": 59,
+                        "CD_PRODUTO": 4096,
+                        "DS_PRODUTO": "MORFINA (DIMORF) CPR C/30MG",
+                        "PAD_ANTERIOR": "SIM",
+                        "PAD_SUGERIDO": "NAO"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid token",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Invalid_token": {
+                    "summary": "Invalid token",
+                    "value": {
+                      "message": "Token não fornecido"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "idHistPro",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/products/dump": {
+      "post": {
+        "tags": [
+          "Produtos"
+        ],
+        "summary": "Exportar",
+        "description": "## Dump Products\n\nRealiza a extração (dump) dos dados de produtos do sistema.\n\n## Método\n\nPOST\n\n## Endpoint\n\n`/products/dump`\n\n## Autenticação\n\nBearer Token obrigatório no header `Authorization`.\n\n## Parâmetros\n\nNão possui parâmetros.\n\n## Body\n\nNão se aplica.\n\n## Regras de Negócio\n\n- Apenas usuários autenticados podem executar esta operação.\n    \n- A operação pode levar alguns instantes, dependendo do volume de dados.\n    \n- Utilizada para fins de carga, sincronização ou auditoria.\n    \n\n## Resposta de Sucesso\n\nDump de produtos realizado com sucesso.\n\n## Exemplo de Resposta\n\n``` json\n{\n  \"message\": \"Dump realizado com sucesso!\"\n}\n\n ```",
+        "responses": {
+          "200": {
+            "description": "Success response",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Success_response": {
+                    "summary": "Success response",
+                    "value": {
+                      "message": "Dump realizado com sucesso!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid token",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Invalid_token": {
+                    "summary": "Invalid token",
+                    "value": {
+                      "message": "Token não fornecido"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/products/update": {
+      "patch": {
+        "tags": [
+          "Produtos"
+        ],
+        "summary": "Atualizar produtos",
+        "description": "## Update Products\n\nAtualiza informações de um ou mais produtos em lote.\n\n## Método\n\nPUT\n\n## Endpoint\n\n`/products/update`\n\n## Autenticação\n\nBearer Token obrigatório no header `Authorization`.\n\n## Parâmetros\n\nNão possui parâmetros.\n\n## Body\n\nArray de objetos contendo os produtos a serem atualizados.\n\n### Campos do Body\n\n- **produto** (number, obrigatório): Código identificador do produto.\n    \n- **padronizado** (string, obrigatório): Indica se o produto é padronizado.\n    \n    - Valores possíveis: `\"S\"` ou `\"N\"`\n        \n\n## Regras de Negócio\n\n- Apenas usuários autenticados podem executar esta operação.\n    \n- Todos os produtos informados devem existir no sistema.\n    \n- A atualização é realizada em lote.\n    \n- Caso algum produto seja inválido, a operação pode ser recusada.\n    \n\n## Exemplo de Request\n\n``` json\n[\n {\n   \"produto\": 10001,\n   \"padronizado\": \"S\"\n },\n {\n   \"produto\": 10002,\n   \"padronizado\": \"N\"\n }\n]\n\n ```",
+        "responses": {
+          "200": {
+            "description": "Success response",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Success_response": {
+                    "summary": "Success response",
+                    "value": {
+                      "message": "Atualização realizada.",
+                      "productUpdated": 1
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid token",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Invalid_token": {
+                    "summary": "Invalid token",
+                    "value": {
+                      "message": "Token não fornecido"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "206": {
+            "description": "Partial success response",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Partial_success_response": {
+                    "summary": "Partial success response",
+                    "value": {
+                      "message": "A atualização foi parcial. Nem todos os produtos foram atualizados.",
+                      "productsUpdated": 1
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "produto": {
+                      "type": "string"
+                    },
+                    "padronizado": {
+                      "type": "string"
+                    }
+                  },
+                  "additionalProperties": true
+                }
+              },
+              "example": [
+                {
+                  "produto": "{{cdProOne}}",
+                  "padronizado": "S"
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "/billing-procedure/import": {
+      "post": {
+        "tags": [
+          "Procedimentos de faturamento"
+        ],
+        "summary": "Carregar arquivo",
+        "description": "## Upload\n\nRealiza o upload de um arquivo XLSX contendo informações de atualização de preços de procedimentos para processamento dentro da API.\n\n## Método\n\nPOST\n\n## Endpoint\n\n`/billing-procedures/import`\n\n## Autenticação\n\nBearer Token obrigatório no header `Authorization`.\n\n## Parâmetros\n\nNão possui parâmetros de URL.\n\n## Body\n\nTipo: `multipart/form-data`\n\n### Campos do Body\n\n- **file** (file, obrigatório): Arquivo XLSX contendo os dados de preços dos procedimentos.\n    \n\n## Regras de Negócio\n\n- Apenas usuários autenticados podem acessar esta rota.\n    \n- O arquivo deve estar no formato `.xlsx`.\n    \n- O arquivo é validado antes do processamento.\n    \n- Dados inválidos ou inconsistentes podem impedir o processamento.\n    \n- O processamento ocorre dentro da API, podendo ser síncrono ou assíncrono, conforme configuração do sistema.\n    \n\n## Exemplo de Request\n\n- Método: `POST`\n    \n- Content-Type: `multipart/form-data`\n    \n- Campo:\n    \n    - `file`: procedures_prices_update.xlsx\n        \n\n## Resposta de Sucesso\n\nArquivo recebido e processado com sucesso.\n\n## Exemplo de Resposta\n\n``` json\n{\n  \"status\": \"success\",\n  \"message\": \"Procedures prices file processed successfully\"\n}\n\n ```",
+        "responses": {
+          "200": {
+            "description": "Requisição realizada com sucesso."
+          },
+          "401": {
+            "description": "Não autenticado ou token inválido."
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                },
+                "required": [
+                  "file"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/billing-procedure/update": {
+      "post": {
+        "tags": [
+          "Procedimentos de faturamento"
+        ],
+        "summary": "Confirmar atualização",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Requisição realizada com sucesso."
+          },
+          "401": {
+            "description": "Não autenticado ou token inválido."
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/billing-procedure/delete/last-competence": {
+      "delete": {
+        "tags": [
+          "Procedimentos de faturamento"
+        ],
+        "summary": "Deletar última competência",
+        "description": "## Deletar - Última competência\n\nRealiza exclusão da última competência importada.\n\n## Método\n\nDELETE\n\n## Endpoint\n\n`/billing-procedure/delete/last-competence`\n\n## Autenticação\n\nBearer Token obrigatório no header `Authorization`.\n\n## Parâmetros\n\nNão possui parâmetros de URL.\n\n## Body\n\nNone\n\n### Campos do Body\n\nNone\n\n## Regras de Negócio\n\n- Apenas usuários autenticados podem acessar esta rota.\n    \n\n## Exemplo de Resposta\n\n``` json\n{\n    \"message\": \"Última competência deletada com sucesso!\"\n}\n\n ```",
+        "responses": {
+          "200": {
+            "description": "Resposta de sucesso",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Resposta_de_sucesso": {
+                    "summary": "Resposta de sucesso",
+                    "value": {
+                      "message": "Última competência deletada com sucesso!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Não existe competência",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "N_o_existe_compet_ncia": {
+                    "summary": "Não existe competência",
+                    "value": {
+                      "message": "Não foi póssivel deletar, não existe competência atual, atualizada."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autenticado ou token inválido."
+          }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/billing-procedure/delete/last-competence/{id}": {
+      "delete": {
+        "tags": [
+          "Procedimentos de faturamento"
+        ],
+        "summary": "Deletar última competência por id",
+        "description": "## Deletar - Última competência\n\nRealiza exclusão da última competência importada.\n\n## Método\n\nDELETE\n\n## Endpoint\n\n`/billing-procedure/delete/last-competence`\n\n## Autenticação\n\nBearer Token obrigatório no header `Authorization`.\n\n## Parâmetros\n\nNão possui parâmetros de URL.\n\n## Body\n\nNone\n\n### Campos do Body\n\nNone\n\n## Regras de Negócio\n\n- Apenas usuários autenticados podem acessar esta rota.\n    \n\n## Exemplo de Resposta\n\n``` json\n{\n    \"message\": \"Última competência deletada com sucesso!\"\n}\n\n ```",
+        "responses": {
+          "200": {
+            "description": "Resposta de sucesso",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Resposta_de_sucesso": {
+                    "summary": "Resposta de sucesso",
+                    "value": {
+                      "message": "Última competência deletada com sucesso!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Não existe competência",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "N_o_existe_compet_ncia": {
+                    "summary": "Não existe competência",
+                    "value": {
+                      "message": "Não foi póssivel deletar, não existe competência atual, atualizada."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Não autenticado ou token inválido."
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "competencia": {
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": true
+              },
+              "example": {
+                "competencia": "{{competencia}}"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/billing-procedure/return-competence-analytics": {
+      "get": {
+        "tags": [
+          "Procedimentos de faturamento"
+        ],
+        "summary": "Consulta de competência - Analítica",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Requisição realizada com sucesso."
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "idTable": {
+                    "type": "string"
+                  },
+                  "competence": {
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": true
+              },
+              "example": {
+                "idTable": "{{idTable}}",
+                "competence": "{{competence}}"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/billing-procedure/return-competence-synthetic": {
+      "get": {
+        "tags": [
+          "Procedimentos de faturamento"
+        ],
+        "summary": "Consulta de competência - Sintética",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Requisição realizada com sucesso."
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "idTable": {
+                    "type": "string"
+                  },
+                  "competence": {
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": true
+              },
+              "example": {
+                "idTable": "{{idTable}}",
+                "competence": "{{competence}}"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
